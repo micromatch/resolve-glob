@@ -1,7 +1,7 @@
 {
   "name": "resolve-glob",
   "description": "Ensures that absolute file paths are always returned from a glob pattern or array of glob patterns.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/jonschlinkert/resolve-glob",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "jonschlinkert/resolve-glob",
@@ -32,6 +32,10 @@
   },
   "keywords": [
     "absolute",
+    "dir",
+    "directory",
+    "expand",
+    "expansion",
     "file",
     "filepath",
     "glob",
@@ -39,7 +43,8 @@
     "is-absolute",
     "is-glob",
     "pattern",
-    "resolve"
+    "resolve",
+    "tilde"
   ],
   "verb": {
     "related": {
