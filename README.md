@@ -1,6 +1,6 @@
 # resolve-glob [![NPM version](https://badge.fury.io/js/resolve-glob.svg)](http://badge.fury.io/js/resolve-glob)
 
-> Ensures that absolute file paths are returned from a glob pattern
+> Ensures that absolute file paths are always returned from a glob pattern or array of glob patterns.
 
 ## Install
 
@@ -15,6 +15,8 @@ $ npm i resolve-glob --save
 ```js
 var glob = require('resolve-glob');
 ```
+
+See [globby](https://github.com/sindresorhus/globby) for the full range of features and options.
 
 **async**
 
@@ -32,6 +34,15 @@ var files = glob.sync(['*.js']);
 console.log(files[0])
 //=> '/Users/jonschlinkert/dev/resolve-glob/index.js'
 ```
+
+### cwd expansion
+
+The following characters are expanded to directories with [resolve-dir](https://github.com/jonschlinkert/resolve-dir) when used as leading characters in `options.cwd`:
+
+* `~`: expanded to the user home directory
+* `@`: expanded to global npm modules directory
+
+See [resolve-dir](https://github.com/jonschlinkert/resolve-dir) for more details.
 
 ## Related projects
 

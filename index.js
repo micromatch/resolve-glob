@@ -25,7 +25,7 @@ module.exports = function(patterns, options, cb) {
   }
 
   var opts = options || {};
-  opts.cwd = opts.cwd || '';
+  opts.cwd = utils.resolve(opts.cwd || '');
 
   utils.glob(patterns, opts, function (err, files) {
     if (err) return cb(err);
@@ -44,7 +44,7 @@ module.exports.sync = function(patterns, options) {
   }
 
   var opts = options || {};
-  opts.cwd = opts.cwd || '';
+  opts.cwd = utils.resolve(opts.cwd || '');
   var files = utils.glob.sync(patterns, opts);
   var len = files.length, i = -1;
 

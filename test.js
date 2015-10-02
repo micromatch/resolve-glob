@@ -37,6 +37,24 @@ describe('glob', function () {
     })
   });
 
+  it('should resolve the absolute path to the user home directory:', function (cb) {
+    glob('*.*', {cwd: '~'}, function (err, files) {
+      if (err) return cb(err);
+      assert(files.length > 0);
+      assert(isAbsolute(files[0]));
+      cb();
+    })
+  });
+
+  it('should resolve the absolute path to global npm modules:', function (cb) {
+    glob('*', {cwd: '@'}, function (err, files) {
+      if (err) return cb(err);
+      assert(files.length > 0);
+      assert(isAbsolute(files[0]));
+      cb();
+    })
+  });
+
   it('should throw an error when a callback is not passed:', function () {
     try {
       glob();
