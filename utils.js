@@ -4,17 +4,17 @@
  * Lazily required module dependencies
  */
 
-var lazy = require('lazy-cache')(require);
+var utils = require('lazy-cache')(require);
 var fn = require;
 
-require = lazy;
-require('globby', 'glob');
+require = utils;
+require('matched', 'glob');
 require('is-valid-glob');
 require('resolve-dir', 'resolve');
 require = fn;
 
 /**
- * Expose `lazy` modules
+ * Expose `utils` modules
  */
 
-module.exports = lazy;
+module.exports = utils;
