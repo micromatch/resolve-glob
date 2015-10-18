@@ -5,8 +5,6 @@ var assert = require('assert');
 var should = require('should');
 var isAbsolute = require('is-absolute');
 var glob = require('./');
-var globby = require('globby');
-
 
 describe('glob', function () {
   it('should resolve the absolute path for files returned by glob:', function (cb) {
