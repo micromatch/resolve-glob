@@ -10,6 +10,10 @@
 var path = require('path');
 var utils = require('./utils');
 
+/**
+ * async
+ */
+
 module.exports = function(patterns, options, cb) {
   if (typeof options === 'function') {
     cb = options;
@@ -24,32 +28,51 @@ module.exports = function(patterns, options, cb) {
     return cb(new Error('expected a valid glob pattern.'));
   }
 
-  var opts = options || {};
-  opts.cwd = utils.resolve(opts.cwd || '');
+  var opts = createOptions(options);
 
   utils.glob(patterns, opts, function (err, files) {
     if (err) return cb(err);
-
-    var len = files.length, i = -1;
-    while (++i < len) {
-      files[i] = path.resolve(opts.cwd, files[i]);
-    }
-    cb(null, files);
+    cb(null, resolveFiles(files, opts));
   });
 };
+
+/**
+ * sync
+ */
 
 module.exports.sync = function(patterns, options) {
   if (!utils.isValidGlob(patterns)) {
     throw new Error('expected a valid glob pattern.');
   }
 
-  var opts = options || {};
-  opts.cwd = utils.resolve(opts.cwd || '');
+  var opts = createOptions(options);
   var files = utils.glob.sync(patterns, opts);
-  var len = files.length, i = -1;
+  return resolveFiles(files, opts);
+};
 
+
+/**
+ * Utils
+ */
+
+function createOptions(options) {
+  var opts = utils.extend({cwd: ''}, options);
+  opts.cwd = utils.resolve(opts.cwd);
+  return opts;
+}
+
+function resolveFiles(files, opts) {
+  var len = files.length, i = -1;
   while (++i < len) {
-    files[i] = path.resolve(opts.cwd, files[i]);
+    files[i] = resolveFile(files[i], opts);
   }
   return files;
-};
+}
+
+function resolveFile(fp, opts) {
+  fp = path.resolve(opts.cwd, path.resolve(fp));
+  if (opts.relative) {
+    fp = utils.relative(process.cwd(), fp);
+  }
+  return fp;
+}
