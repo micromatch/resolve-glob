@@ -79,6 +79,11 @@ describe('glob.sync', function () {
     assert(isAbsolute(files[0]));
   });
 
+  it('should return the pattern when no matches and nonull is passed:', function () {
+    var files = glob.sync('*.foo', {nonull: true});
+    assert(files[0] === '*.foo');
+  });
+
   it('should resolve the absolute path with a cwd:', function () {
     var files = glob.sync('*.js', {cwd: 'node_modules/is-absolute'});
     assert(files.length > 0);

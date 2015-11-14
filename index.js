@@ -29,9 +29,15 @@ module.exports = function(patterns, options, cb) {
   }
 
   var opts = createOptions(options);
+  var nonull = opts.nonull === true;
+  delete opts.nonull;
 
   utils.glob(patterns, opts, function (err, files) {
     if (err) return cb(err);
+
+    if (!files.length && nonull) {
+      return cb(null, arrayify(patterns));
+    }
     cb(null, resolveFiles(files, opts));
   });
 };
@@ -46,14 +52,23 @@ module.exports.sync = function(patterns, options) {
   }
 
   var opts = createOptions(options);
+  var nonull = opts.nonull === true;
+  delete opts.nonull;
+
   var files = utils.glob.sync(patterns, opts);
+  if (!files.length && nonull) {
+    return arrayify(patterns);
+  }
   return resolveFiles(files, opts);
 };
-
 
 /**
  * Utils
  */
+
+function arrayify(val) {
+  return val ? (Array.isArray(val) ? val : [val]) : [];
+}
 
 function createOptions(options) {
   var opts = utils.extend({cwd: ''}, options);
