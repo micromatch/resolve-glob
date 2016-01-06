@@ -71,8 +71,8 @@ function arrayify(val) {
 }
 
 function createOptions(options) {
-  var opts = utils.extend({cwd: ''}, options);
-  opts.cwd = utils.resolve(opts.cwd);
+  var opts = utils.extend({cwd: process.cwd()}, options);
+  opts.cwd = path.resolve(utils.resolve(opts.cwd));
   return opts;
 }
 
@@ -85,7 +85,7 @@ function resolveFiles(files, opts) {
 }
 
 function resolveFile(fp, opts) {
-  fp = path.resolve(opts.cwd, path.resolve(fp));
+  fp = path.resolve(opts.cwd, fp);
   if (opts.relative) {
     fp = utils.relative(process.cwd(), fp);
   }
