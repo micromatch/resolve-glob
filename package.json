@@ -1,7 +1,7 @@
 {
   "name": "resolve-glob",
   "description": "Ensures that absolute file paths are always returned from a glob pattern or array of glob patterns.",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "homepage": "https://github.com/jonschlinkert/resolve-glob",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "jonschlinkert/resolve-glob",
@@ -23,12 +23,13 @@
   "dependencies": {
     "extend-shallow": "^2.0.1",
     "is-valid-glob": "^0.3.0",
-    "lazy-cache": "^0.2.4",
-    "matched": "^0.3.2",
+    "lazy-cache": "^1.0.3",
+    "matched": "^0.4.1",
     "relative": "^3.0.2",
     "resolve-dir": "^0.1.0"
   },
   "devDependencies": {
+    "gulp-format-md": "^0.1.4",
     "is-absolute": "^0.2.2",
     "mocha": "*",
     "should": "*"
@@ -56,6 +57,9 @@
         "is-glob",
         "is-valid-glob"
       ]
-    }
+    },
+    "plugins": [
+      "gulp-format-md"
+    ]
   }
 }
