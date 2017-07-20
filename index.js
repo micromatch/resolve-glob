@@ -1,14 +1,18 @@
 /*!
  * resolve-glob <https://github.com/jonschlinkert/resolve-glob>
  *
- * Copyright (c) 2015, Jon Schlinkert.
- * Licensed under the MIT License.
+ * Copyright (c) 2015-2017, Jon Schlinkert.
+ * Released under the MIT License.
  */
 
 'use strict';
 
 var path = require('path');
-var utils = require('./utils');
+var extend = require('extend-shallow');
+var isValidGlob = require('is-valid-glob');
+var resolveDir = require('resolve-dir');
+var relative = require('relative');
+var glob = require('matched');
 
 /**
  * async
@@ -21,23 +25,29 @@ module.exports = function(patterns, options, cb) {
   }
 
   if (typeof cb !== 'function') {
-    throw new Error('expected a callback function.');
+    throw new TypeError('expected callback to be a function');
   }
 
-  if (!utils.isValidGlob(patterns)) {
-    return cb(new Error('expected a valid glob pattern.'));
+  if (!isValidGlob(patterns)) {
+    cb(new TypeError('expected glob to be a string or array'));
+    return;
   }
 
   var opts = createOptions(options);
   var nonull = opts.nonull === true;
   delete opts.nonull;
 
-  utils.glob(patterns, opts, function (err, files) {
-    if (err) return cb(err);
+  glob(patterns, opts, function(err, files) {
+    if (err) {
+      cb(err);
+      return;
+    }
 
     if (!files.length && nonull) {
-      return cb(null, arrayify(patterns));
+      cb(null, arrayify(patterns));
+      return;
     }
+
     cb(null, resolveFiles(files, opts));
   });
 };
@@ -47,15 +57,15 @@ module.exports = function(patterns, options, cb) {
  */
 
 module.exports.sync = function(patterns, options) {
-  if (!utils.isValidGlob(patterns)) {
-    throw new Error('expected a valid glob pattern.');
+  if (!isValidGlob(patterns)) {
+    throw new TypeError('expected glob to be a string or array');
   }
 
   var opts = createOptions(options);
   var nonull = opts.nonull === true;
   delete opts.nonull;
 
-  var files = utils.glob.sync(patterns, opts);
+  var files = glob.sync(patterns, opts);
   if (!files.length && nonull) {
     return arrayify(patterns);
   }
@@ -71,8 +81,8 @@ function arrayify(val) {
 }
 
 function createOptions(options) {
-  var opts = utils.extend({cwd: process.cwd()}, options);
-  opts.cwd = path.resolve(utils.resolve(opts.cwd));
+  var opts = extend({cwd: process.cwd()}, options);
+  opts.cwd = path.resolve(resolve(opts.cwd));
   return opts;
 }
 
@@ -87,7 +97,11 @@ function resolveFiles(files, opts) {
 function resolveFile(fp, opts) {
   fp = path.resolve(opts.cwd, fp);
   if (opts.relative) {
-    fp = utils.relative(process.cwd(), fp);
+    fp = relative(process.cwd(), fp);
   }
   return fp;
+}
+
+function resolve(cwd) {
+  return path.resolve(resolveDir(cwd));
 }
